@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="report_payment_order_document">
+            <t t-call="report.external_layout">
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <br/>
+                    <h2>
+                        <span>Payment Order</span>
+                    </h2>
+                    <br/>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div t-field="o.supplier_id"
+                                t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
+                        </div>
+                        <div class="col-xs-5 col-xs-offset-1">
+                            <table>
+                                <tr><td>Order No:</td><td><span t-field="o.number"/></td></tr>
+                                <tr><td>Date:</td><td><span t-field="o.date"/></td></tr>
+                                <tr><td>Payment Type:</td><td><span t-field="o.payment_type"/></td></tr>
+                                <tr><td>Payment Methode:</td><td><span t-field="o.journal_id"/></td></tr>
+                                <tr><td>Cheque No:</td><td></td><span t-field="o.cheque_no"/></tr>
+                            </table>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="row col-xs-12"><i><span t-field="o.note"/></i></div>
+                    <br/><br/>
+                    <table class="table table-condensed" style="border-top: 2px solid black;">
+                        <thead>
+                            <tr>
+                                <th>Memo</th>
+                                <th class="text-right" width="15%">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody class="sale_tbody">
+                            <tr t-foreach="o.payment_line" t-as="l">
+                                <td>
+                                   <span t-field="l.memo"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-field="l.amount"/>
+                                </td>
+                            </tr>
+                            <tr class="border-black">
+                                <td class="text-right"><strong>Total:</strong></td>
+                                <td class="text-right">
+                                    <strong><span t-field="o.amount_total"/></strong>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="raw col-xs-12"><i><span t-field="o.amount_text" /></i></div>
+                </div>
+            </t>
+        </template>
+
+        <template id="report_payment_order">
+            <t t-call="report.html_container">
+                <t t-foreach="doc_ids" t-as="doc_id">
+                    <t t-raw="translate_doc(doc_id, doc_model, 'supplier_id.lang', 'account_payment_order.report_payment_order_document')"/>
+                </t>
+            </t>
+        </template>
+
+        <report
+                id="action_report_payment_order"
+                model="account.payment.order"
+                string="Payment Order Report"
+                report_type="qweb-pdf"
+                name="account_payment_order.report_payment_order"
+                file="account_payment_order.report_payment_order"
+                />
+        <!--<record id="action_report_payment_order" model="ir.actions.report.xml">-->
+            <!--<field name="paperformat_id" ref="budget_custom.paperformat_budget_variance"/>-->
+        <!--</record>-->
+    </data>
+</openerp>
